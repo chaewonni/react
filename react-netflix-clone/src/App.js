@@ -1,4 +1,4 @@
-import { Outlet, Routes, Route, BrowserRouter } from "react-router-dom";
+import { Outlet, Routes, Route } from "react-router-dom";
 import './App.css';
 import Nav from './components/Nav';
 import Footer from './components/Footer';
@@ -21,14 +21,13 @@ const Layout = () => {
 function App() {
   return (
     <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route index element={<MainPage />} />
-            <Route path=":movieId" element={<DetailPage />} />
-            <Route index element={<SearchPage />} />
-          </Route>
-        </Routes></BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<MainPage />} />
+          <Route path=":movieId" element={<DetailPage />} />
+          <Route index element={<SearchPage />} />
+        </Route>
+      </Routes>
     </div>
   );
 }
