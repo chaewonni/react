@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import axios from '../../api/axios'
 import "./SearchPage.css"
+import { useDeboune } from '../../hooks/useDebounce';
 
 export default function SearchPage() {
 
+    const navigate = useNavigate();
     const [searchResults, setSearchResults] = useState([]);
 
     console.log('useLocation()', useLocation());
@@ -14,15 +16,17 @@ export default function SearchPage() {
 
     let query = useQuery();
     const searchTerm = query.get("q");
+    const debounceSearchTerm = useDeboune(searchTerm, 500);
     console.log('searchTerm', searchTerm)
 
     useEffect(() => {
-        if (searchTerm) {
+        if (debounceSearchTerm) {
             fetchSearchMovie(searchTerm);
         }
-    }, [searchTerm]);
+    }, [debounceSearchTerm]);
 
     const fetchSearchMovie = async (searchTerm) => {
+        console.log('searchTerm', searchTerm)
         try {
             const request = await axios.get(
                 `/search/multi?include_adult=false&query=${searchTerm}`
@@ -42,8 +46,8 @@ export default function SearchPage() {
                         const movieImageUrl = 
                         "https://image.tmdb.org/t/p/w500" + movie.backdrop_path
                         return (
-                            <div className='movie'>
-                                <div 
+                            <div className='movie' key={movie.id}>
+                                <div onClick={() => navigate(`/${movie.id}`)}
                                 className='movie__column-poster'
                                 >
                                     <img
@@ -59,7 +63,7 @@ export default function SearchPage() {
         ) : 
         <section className='no-results'>
             <div className='no-results__text'>
-                <p>찾고자 하는 검색어 "{searchTerm}"에 맞는 영화가 없습니다.</p>
+                <p>찾고자 하는 검색어 "{debounceSearchTerm}"에 맞는 영화가 없습니다.</p>
             </div>
 
         </section>

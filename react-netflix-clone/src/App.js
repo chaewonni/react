@@ -25,7 +25,7 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<MainPage />} />
           <Route path=":movieId" element={<DetailPage />} />
-          <Route index element={<SearchPage />} />
+          <Route path="search" element={<SearchPage />} />
         </Route>
       </Routes>
     </div>
